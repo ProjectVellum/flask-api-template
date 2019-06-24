@@ -1,0 +1,17 @@
+Metadata-Version: 2.1
+Name: flask-fat
+Version: 0.0.1
+Summary: A Python3 netlink handler.
+Home-page: https://github.hpe.com/atsugami-kun/flask-api-template
+Author: Rocky Craig, Zach Volchak
+Author-email: zakhar.volchak@hpe.com
+License: UNKNOWN
+Description: Flask Api Template (fat) is a Flask-based basic Rest implementation with the intention
+        of being inherited by other Rest-based applications. It helps save time implementing
+        the basic, routine Rest server setup, e.g. starts server, find blueprints, handles
+        config file and etc.
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: GNU General Public License v2 (GPLv2)
+Classifier: Operating System :: POSIX :: Linux
+Description-Content-Type: text/markdown
