@@ -93,4 +93,11 @@ https://docs.python.org/2/distutils/builtdist.html
 
 ##### .deb build
 
-###### TODO (currently unknown)
+Run from top of the project:
+```
+    python setup.py --command-packages=stdeb.command bdist_deb
+```
+
+For more info:
+
+https://pypi.org/project/stdeb/#quickstart-1-install-something-from-pypi-now-i-don-t-care-about-anything-else
