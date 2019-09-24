@@ -66,3 +66,31 @@ https://github.hpe.com/atsugami-kun/flask-api-template/blob/master/flask_fat/blu
 For a "real life" example project look over there:
 
 https://github.hpe.com/atsugami-kun/redfisher/tree/master/redfisher
+
+
+### Ways to Build/Package this source
+
+##### pip3 build
+
+To build/rebuild pip3 dist, run the following from the top of the project (where setup.py is):
+```
+    python3 setup.py sdist bdist_wheel
+```
+
+##### .rpm build
+
+```
+python setup.py bdist_rpm
+```
+
+More info on how to build rpm from python source:
+
+
+https://docs.python.org/2.0/dist/creating-rpms.html
+
+https://docs.python.org/2/distutils/builtdist.html
+
+
+##### .deb build
+
+###### TODO (currently unknown)

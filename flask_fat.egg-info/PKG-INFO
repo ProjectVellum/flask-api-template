@@ -1,9 +1,9 @@
 Metadata-Version: 2.1
 Name: flask-fat
-Version: 0.1
+Version: 0.1.1
 Summary: A Python3 netlink handler.
 Home-page: https://github.hpe.com/atsugami-kun/flask-api-template
-Author: Rocky Craig, Zach Volchak
+Author: Zach Volchak
 Author-email: zakhar.volchak@hpe.com
 License: UNKNOWN
 Description: Flask Api Template (fat) is a Flask-based basic Rest implementation with the intention
@@ -75,8 +75,29 @@ Description: Flask Api Template (fat) is a Flask-based basic Rest implementation
         
         https://github.hpe.com/atsugami-kun/redfisher/tree/master/redfisher
         
+        
+        ### Ways to Build for Linux distributions
+        
+        
+        ##### .deb build
+        
+        ###### TODO (currently unknown)
+        
+        ##### .rpm build
+        
+        ```
+        python setup.py bdist_rpm
+        ```
+        
+        More info on how to build rpm from python source:
+        
+        
+        https://docs.python.org/2.0/dist/creating-rpms.html
+        
+        https://docs.python.org/2/distutils/builtdist.html
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: GNU General Public License v2 (GPLv2)
 Classifier: Operating System :: POSIX :: Linux
+Requires-Python: >=3.6
 Description-Content-Type: text/markdown
