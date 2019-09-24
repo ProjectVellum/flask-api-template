@@ -1,4 +1,10 @@
 #/usr/lib/python3
+"""
+    Packaging guide: https://packaging.python.org/tutorials/packaging-projects/
+
+    To build rpm package:
+    https://docs.python.org/2.0/dist/creating-rpms.html
+"""
 import setuptools
 
 long_dsc = ''
@@ -8,8 +14,8 @@ with open('README.md', 'r') as file_obj:
 
 setuptools.setup(
     name="flask-fat",
-    version="0.1",
-    author="Rocky Craig, Zach Volchak",
+    version="0.1.1",
+    author="Zach Volchak",
     author_email="zakhar.volchak@hpe.com",
     description="A Python3 netlink handler.",
     long_description=long_dsc,
@@ -21,4 +27,5 @@ setuptools.setup(
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
         "Operating System :: POSIX :: Linux",
     ],
+    python_requires='>=3.6'
 )
