@@ -68,6 +68,21 @@ For a "real life" example project look over there:
 https://github.hpe.com/atsugami-kun/redfisher/tree/master/redfisher
 
 
+### Logging Configuration
+
+By default, this API use ./logging.yaml to configure its logging object that will Only log to Stdout and will not log into file. A yaml example with the file handler can be found [in this article](https://fangpenlin.com/posts/2012/08/26/good-logging-practice-in-python/).
+
+Note, there is a hard requirement for the yaml to have a FlaskFatLog logger in the "loggers" attribute:
+
+```
+loggers:
+  FlaskFatLog:
+    level: DEBUG
+    handlers: [stdout_handler, info_file_handler]
+```
+
+If you wish to add more and/or different "loggers", then you will need to override the "def logging(self)" property of the [APIBaseline](https://github.com/ProjectVellum/flask-api-template/blob/master/flask_fat/baseline.py) class.
+
 ### Ways to Build/Package this source
 
 ##### pip3 build

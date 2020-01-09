@@ -17,39 +17,62 @@ import glob
 import os
 import sys
 import time
+import logging
+import logging.config
+import yaml
 from pdb import set_trace
 
 #pip install -U flask-cors (module is in current dir)
 # import addons.flask_cors as flask_cors
 import flask_cors
-
+from .config_builder import ConfigBuilder
 
 class APIBaseline:
 
-    def __init__(self, cfg, **kwargs):
+    def __init__(self, name, **kwargs):
         """
+        @param name: name for the running server and its PID.
         @param **kwargs:
-            @key server_name: name for the running server and its PID.
             @key bp_path: path to a blueprints/ folder. default=./blueprints/
             @key verbose: <bool> make it talk (or not).
             @key ignore: list of blueprint names to be ignored during init.
             @key config: Flask config properties.
+            @key loggin_cfg: path to yaml or a dict obj that logging understands.
         """
+        # When inheriting APIBaseline, user must provide a unique name for the
+        # application. This name will be used for finding ~/.config/NAME cfg file.
+        self.kwargs = kwargs
+        self.name = name
+        self._setup_logging(kwargs.get('logging_cfg', None))
+
         bp_path = kwargs.get('bp_path', None)
+
+        # Getting the right pass to the config file for this server.
+        self.config_builder = ConfigBuilder(self.name, self.__file__)
+        cfg = kwargs.get('cfg', None)
+        if cfg is None:
+            cfg = self.config_builder.priority_cfg_path
+
+        if cfg is None:
+            err_msg = 'Couldn\'t find config file at any of the following locations: %s'
+            err_msg = err_msg % self.config_builder.cfg_priority_order
+            self.logging.error(err_msg, exc_info=True)
+            raise RuntimeError(err_msg)
+
+        self.logging.critical('Config file used: %s' % cfg)
+
         if bp_path is None:
             bp_path = 'blueprints/'
 
-        # trip trailing slash from path
         self.path = bp_path.rstrip('/') if bp_path.endswith('/') else bp_path
         self.path = self.root_dir + '/' + self.path
 
-        #all registered blueprints path relative to blueprints dir path:
-        #(e.g. example/blueprint.py)
+        # all registered blueprints path relative to blueprints dir path:
+        # (e.g. example/blueprint.py)
         self.blueprints = []
         self.verbose = kwargs.get('verbose', True)
-        self.server_name = kwargs.get('server_name', 'CustomAPIServer')
 
-        self.app = flask.Flask(kwargs.get('server_name', self.server_name),
+        self.app = flask.Flask(kwargs.get('server_name', self.name),
                                 static_folder='static',
                                 static_url_path='/static')
 
@@ -75,6 +98,7 @@ class APIBaseline:
                 continue
             bp_list.extend([path for path in glob.glob(bp_path + '/*.bp') ])
             bp_list.extend([path for path in glob.glob(bp_path + '/blueprint.py') ])
+
         #get rid of .py and .bp extension in the path name to make it importable
         #bp_list = [path.rstrip('.py') for path in bp_list]
         for bp in bp_list:
@@ -82,7 +106,7 @@ class APIBaseline:
             bp_name = module_name.split('.')[-3]
             if(bp_name in ignore_bp):
                 if self.verbose:
-                    print('!! Ignoring to load blueprint "%s" !!' % bp_name)
+                    logging.info('!! Ignoring to load blueprint "%s" !!' % bp_name)
                 continue
 
             try:
@@ -95,8 +119,7 @@ class APIBaseline:
                 if self.config.get('PEDANTIC_INIT', True):
                     raise RuntimeError(msg)
                 else:
-                    print(' --- WARNING ----\n %s' % msg)
-                    print(' ----------------')
+                    logging.warning('[PEDANTIC_INIT is off]: \n %s' % msg)
                 continue
 
             imported_bp.Journal.on_post_register()
@@ -104,10 +127,10 @@ class APIBaseline:
             self.blueprints.append(bp.split(self.path)[1].lstrip('/'))
 
             if self.verbose:
-                print('-> Regestring bluerpint "%s"...' % imported_bp.Journal.name)
+                logging.info('-> Regestring bluerpint "%s"...' % imported_bp.Journal.name)
 
         if self.verbose:
-            print('-> RestAPI reporting for duty.')
+            logging.info('-> RestAPI reporting for duty.')
 
 
     def SetConfig(self, path_or_dict, override=False):
@@ -141,7 +164,40 @@ class APIBaseline:
                             port=self.config['PORT'],
                             debug=self.config['DEBUG'])
         except Exception as error:
-            print('Error while running! [ %s : %s ]' % (type(error), error))
+            err_msg = 'Error while running! [ %s : %s ]' % (type(error), error)
+            self.logging.error(err_msg, exc_info=True)
+
+
+    def _setup_logging(self, cfg):
+        """
+         Sets the config obj of the logging from the yaml path or a dict obj.
+        If no cfg was parsed - no config will be set and default logging will be
+        used.
+        """
+        if not isinstance(cfg, dict):
+            cfg = self._read_logging_yaml(cfg)
+        if cfg is not None:
+            logging.config.dictConfig(cfg)
+
+
+    def _read_logging_yaml(self, path):
+        """
+            Opens the yaml filr at the path and parse it into a dictionary.
+
+        @param path: a string path to a yaml or None to use a default path at
+                    at this_file_dir_/logging.yaml is used.
+        @return: a dict object of parsed yaml file.
+        """
+        if path is None:
+            path = os.path.dirname(__file__)
+            path = os.path.join(path, 'logging.yaml')
+
+        if not os.path.exists(path):
+            return {}
+
+        with open(path, 'r') as file_obj:
+            config = yaml.safe_load(file_obj)
+        return config
 
 
     @property
@@ -150,6 +206,9 @@ class APIBaseline:
 
     @property
     def config(self):
+        """ Returns the flask's app config file which also contains the values of
+        the passed cfg file into the constructor on object instantiation.
+        """
         return self.app.config
 
     @property
@@ -177,6 +236,28 @@ class APIBaseline:
     @property
     def test_client(self):
         return self.app.test_client
+
+
+    @property
+    def logging(self):
+        """
+            Returns a logger set by the logging.yaml config file with hardcoded
+        logger name "FlaskFatLog". It will also set verbosity levels of the stdout
+        logger handlers based of the "verbosity" argument set in constructor.
+
+        If you want a different logger name, override this property and do
+        whatever with it.
+        """
+        verbosity = self.kwargs.get('verbosity', 3) #default is Warning level
+        log_level = verbosity * 10
+        if log_level >= 0:
+            log_level = 60 - log_level
+            log_level = 0 if log_level < 0 else log_level
+
+        for log in logging.root.handlers:
+            if not isinstance(log, logging.handlers.RotatingFileHandler):
+                log.setLevel(log_level)
+        return logging.getLogger('FlaskFatLog')
 
 
 def parse_cmd():
