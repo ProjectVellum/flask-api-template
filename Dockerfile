@@ -14,8 +14,6 @@ RUN apt update -y; apt install -y python3-pip git
 RUN pip3 install -e .
 RUN pip3 install -r requirements.txt
 
-RUN /bin/bash ./flask_fat/tests/test_all.sh
-
 # Make port 80 available to the world outside this container
 EXPOSE 80
 
@@ -23,4 +21,4 @@ EXPOSE 80
 ENV NAME GXP
 
 # Run app.py when the container launches
-CMD ["bash", "./gxp/tests/everything.sh"]
+CMD ["bash", "./flask_fat/tests/test_all.sh"]
