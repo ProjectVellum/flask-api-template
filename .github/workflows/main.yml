@@ -6,6 +6,6 @@ jobs:
     name: Run project's unittests
     steps:
         - name: Checkout
-          uses: actions/checkout@zach_dev
+          uses: ProjectVellum/flask-api-template@zach_dev
         - name: Run Tests
           uses: ./.github/actions/action_testall.yml
