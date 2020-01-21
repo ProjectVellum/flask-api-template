@@ -1,6 +1,14 @@
-# action.yml
-name: 'flask-fat test all'
-description: 'Greet someone and record the time'
-runs:
-  using: 'docker'
-  image: 'Dockerfile'
+on: [push]
+
+jobs:
+  test_job:
+    runs-on: ubuntu-latest
+    name: Run project's unittests
+    steps:
+    # To use this repository's private action, you must check out the repository
+    - name: Checkout
+      uses: actions/checkout@v2
+    - uses: ./ # Uses an action in the root directory
+    - name: Run Tests
+      id: allTests
+      uses: actions/flask-api-template@zach_dev
