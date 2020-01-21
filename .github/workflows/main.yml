@@ -6,4 +6,4 @@ jobs:
     name: Run project's unittests
     steps:
         - name: Run Tests
-            uses: ./.github/actions/action_testall.yml
+          uses: ./.github/actions/action_testall.yml
