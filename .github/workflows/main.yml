@@ -5,10 +5,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Run project's unittests
     steps:
-    # To use this repository's private action, you must check out the repository
-    - name: Checkout
-      uses: actions/checkout@v2
-    - uses: ./ # Uses an action in the root directory
-    - name: Run Tests
-      id: allTests
-      uses: actions/flask-api-template@zach_dev
+        - name: Run Tests
+        uses: ./.github/actions/action_testall.yml
+        id: allTests
