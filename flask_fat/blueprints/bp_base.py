@@ -123,8 +123,8 @@ class Journal():
     @property
     def spoofed(self):
         """ Return some data (random?) when the expected API does not respond.
-        This is usefull when you need to "recover" and shouw at least some data
-        for to present.
+        This is usefull when you need to "recover" and show at least some data
+        to present.
         Note: this must be overwritten by the child class.
         """
         raise NotImplemented("You have you overwrite this property!")
@@ -133,7 +133,7 @@ class Journal():
     ''' --- Request handles. Validation and Response makers.... --- '''
 
     def requestor_wants_json(self, headers):
-        """ Check if 'application/json' is in the requestor's header. Return
+        """ Check if 'application/json' is in the requestor header. Return
         True if so. Also, catching ANY exception on getting request.headers will
         return True.
 
@@ -160,7 +160,7 @@ class Journal():
 
 
     def validate_version(self, headers):
-        """ Validate requestor's version passed in the header matches this API
+        """ Validate requestor version passed in the header matches this API
         serving version. """
         if not self.requestor_wants_json(headers):  # Ignore versioning for HTML
             return None

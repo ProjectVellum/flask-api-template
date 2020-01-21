@@ -1,0 +1,6 @@
+# action.yml
+name: 'flask-fat test all'
+description: 'Greet someone and record the time'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'

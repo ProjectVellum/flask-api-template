@@ -3,7 +3,7 @@ import os
 import unittest
 from pdb import set_trace
 
-import flask_api_template as FAT
+import flask_fat
 
 
 class FlaskBookshelfTests(unittest.TestCase):
@@ -21,7 +21,7 @@ class FlaskBookshelfTests(unittest.TestCase):
 
 
     def setUp(cls):
-        app = FAT.APIBaseline(cls.MOCK_CFG)
+        app = flask_fat.APIBaseline('flask_fat_test', cfg=cls.MOCK_CFG)
         cls.app = app.app.test_client()
         cls.headers = {
             'Accept' : 'version=0.1',

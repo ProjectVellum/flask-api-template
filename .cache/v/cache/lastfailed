@@ -1,0 +1,3 @@
+{
+  "flask_fat/tests/test_import.py::TestImports::test_import_all": true
+}
