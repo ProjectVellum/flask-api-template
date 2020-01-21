@@ -5,5 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Run project's unittests
     steps:
+        - name: Checkout
+          uses: actions/checkout@zach_dev
         - name: Run Tests
           uses: ./.github/actions/action_testall.yml
