@@ -3,7 +3,9 @@ of being inherited by other Rest-based applications. It helps save time implemen
 the basic, routine Rest server setup, e.g. starts server, find blueprints, handles
 config file and etc.
 
-![](https://github.com/ProjectVellum/flask-api-template/workflows/install_and_unittests/badge.svg)
+##### Latest tests status
+
+![](https://github.com/ProjectVellum/flask-api-template/workflows/.github/workflows/main.yml/badge.svg)
 
 ### Ways to Install
 
