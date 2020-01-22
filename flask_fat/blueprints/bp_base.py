@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-    Base class to be used\inherited by all the blueprints that lives in this
+    Base class to be used/inherited by all the blueprints that lives in this
 directory space. The main reason for this "base" is to incapsulate the steps
 taken by all the blueprints to regester it with Flask. Also, adds some other
 usefull functions that will be used in most blueprints "as-is" or with slight

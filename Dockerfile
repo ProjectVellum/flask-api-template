@@ -8,13 +8,16 @@ WORKDIR /app
 COPY . /app
 
 RUN export LANG=C.UTF-8
-RUN apt update -y; apt install -y python3-pip git
+RUN apt update -y && apt install -y python3-pip git
 
 # Install any needed packages specified in requirements.txt
 RUN pip3 install -e .
 RUN pip3 install -r requirements.txt
 
-RUN /bin/bash /app/flask_fat/tests/test_all.sh
+ENV target_dir /app/flask_fat
+
+RUN ls -l ${target_dir}
+RUN /bin/bash ${target_dir}/tests/test_all.sh
 
 # Run app.py when the container launches
-CMD ["bash", "/app/flask_fat/tests/test_all.sh"]
+CMD ["bash", ${target_dir} + "/tests/test_all.sh"]
