@@ -14,13 +14,13 @@ with open('README.md', 'r') as file_obj:
 
 setuptools.setup(
     name="flask-fat",
-    version="0.1.1",
+    version="0.1.2",
     author="Zach Volchak",
     author_email="zakhar.volchak@hpe.com",
     description="A Python3 netlink handler.",
     long_description=long_dsc,
     long_description_content_type="text/markdown",
-    url="https://github.hpe.com/atsugami-kun/flask-api-template",
+    url="https://github.com/ProjectVellum/flask-api-template",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
