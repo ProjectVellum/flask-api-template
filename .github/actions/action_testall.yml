@@ -1,6 +1,6 @@
 # action.yml
 name: 'flask-fat test all'
-description: 'Greet someone and record the time'
+description: 'Runs container to test install and runs project tests.'
 runs:
   using: 'docker'
-  image: 'Dockerfile'
+  image: 'Dockerfiles/Dockerfile'

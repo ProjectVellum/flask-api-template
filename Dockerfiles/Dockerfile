@@ -14,7 +14,7 @@ RUN apt update -y && apt install -y python3-pip git
 RUN pip3 install -e .
 RUN pip3 install -r requirements.txt
 
-ENV target_dir /app/flask_fat
+ENV target_dir ./flask_fat
 
 RUN ls -l ${target_dir}
 RUN /bin/bash ${target_dir}/tests/test_all.sh
