@@ -8,13 +8,14 @@ WORKDIR /app
 COPY . /app
 
 RUN export LANG=C.UTF-8
-RUN apt update -y && apt install -y python3-pip git
-
+# update repo and
 # Install any needed packages specified in requirements.txt
-RUN pip3 install -e .
-RUN pip3 install -r requirements.txt
+RUN apt update -y && \
+    apt install -y python3-pip git && \
+    pip3 install . && \
+    pip3 install -r requirements.txt
 
-ENV target_dir ./flask_fat
+ENV target_dir /app/flask_fat
 
 RUN ls -l ${target_dir}
 RUN /bin/bash ${target_dir}/tests/test_all.sh

@@ -9,25 +9,7 @@ import flask_fat
 class FlaskBookshelfTests(unittest.TestCase):
 
     MOCK_CFG = os.path.dirname(os.path.abspath(__file__)) + '/mock.cfg'
-    APP_NAME = 'flask_fat_test'
-
-    @classmethod
-    def setUpClass(cls):
-        pass
-
-
-    @classmethod
-    def tearDownClass(cls):
-        pass
-
-
-    def setUp(self):
-        pass
-
-
-    def tearDown(self):
-        pass
-
+    APP_NAME = 'flask_fat_test_server'
 
     def test_server_init(self):
         cfg = {
@@ -41,7 +23,6 @@ class FlaskBookshelfTests(unittest.TestCase):
         self.assertTrue(app.config['TESTING'] == cfg['TESTING'])
         self.assertTrue(app.config['HOST'] == cfg['HOST'])
         self.assertTrue(app.config['PORT'] == cfg['PORT'])
-        self.assertTrue('example/blueprint.py' in app.blueprints)
 
 
     def test_config_set(self):

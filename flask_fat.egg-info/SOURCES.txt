@@ -3,6 +3,8 @@ setup.py
 flask_fat/__init__.py
 flask_fat/baseline.py
 flask_fat/config_builder.py
+flask_fat/logging.yaml
+flask_fat/server.cfg
 flask_fat.egg-info/PKG-INFO
 flask_fat.egg-info/SOURCES.txt
 flask_fat.egg-info/dependency_links.txt

@@ -17,7 +17,7 @@ class TestImports(unittest.TestCase):
             flask_fat.blueprints
             flask_fat.Journal
             flask_fat.APIBaseline
-            self.assertTrue(True, 'All good.')
+            self.assertTrue(True)
         except Exception as err:
             self.assertTrue(False, err)
 
