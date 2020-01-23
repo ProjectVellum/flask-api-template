@@ -3,4 +3,4 @@ name: 'flask-fat test all'
 description: 'Runs container to test install and runs project tests.'
 runs:
   using: 'docker'
-  image: 'Dockerfiles/Dockerfile'
+  image: './Dockerfiles/Dockerfile'
