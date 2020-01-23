@@ -3,9 +3,7 @@ on: [push]
 jobs:
   test_job:
     runs-on: ubuntu-latest
-    name: Run project's unittests
+    name: install_and_unittests
     steps:
         - name: Checkout
           uses: ProjectVellum/flask-api-template@zach_dev
-        - name: Run Tests
-          uses: ./.github/actions/action_testall.yml

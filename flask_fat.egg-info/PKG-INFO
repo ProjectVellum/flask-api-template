@@ -1,8 +1,8 @@
 Metadata-Version: 2.1
 Name: flask-fat
-Version: 0.1.1
+Version: 0.1.2
 Summary: A Python3 netlink handler.
-Home-page: https://github.hpe.com/atsugami-kun/flask-api-template
+Home-page: https://github.com/ProjectVellum/flask-api-template
 Author: Zach Volchak
 Author-email: zakhar.volchak@hpe.com
 License: UNKNOWN
@@ -11,6 +11,9 @@ Description: Flask Api Template (fat) is a Flask-based basic Rest implementation
         the basic, routine Rest server setup, e.g. starts server, find blueprints, handles
         config file and etc.
         
+        ##### Latest tests status
+        
+        ![](https://github.com/ProjectVellum/flask-api-template/workflows/.github/workflows/main.yml/badge.svg)
         
         ### Ways to Install
         
@@ -76,12 +79,29 @@ Description: Flask Api Template (fat) is a Flask-based basic Rest implementation
         https://github.hpe.com/atsugami-kun/redfisher/tree/master/redfisher
         
         
-        ### Ways to Build for Linux distributions
+        ### Logging Configuration
         
+        By default, this API use ./logging.yaml to configure its logging object that will Only log to Stdout and will not log into file. A yaml example with the file handler can be found [in this article](https://fangpenlin.com/posts/2012/08/26/good-logging-practice-in-python/).
         
-        ##### .deb build
+        Note, there is a hard requirement for the yaml to have a FlaskFatLog logger in the "loggers" attribute:
         
-        ###### TODO (currently unknown)
+        ```
+        loggers:
+          FlaskFatLog:
+            level: DEBUG
+            handlers: [stdout_handler, info_file_handler]
+        ```
+        
+        If you wish to add more and/or different "loggers", then you will need to override the "def logging(self)" property of the [APIBaseline](https://github.com/ProjectVellum/flask-api-template/blob/master/flask_fat/baseline.py) class.
+        
+        ### Ways to Build/Package this source
+        
+        ##### pip3 build
+        
+        To build/rebuild pip3 dist, run the following from the top of the project (where setup.py is):
+        ```
+            python3 setup.py sdist bdist_wheel
+        ```
         
         ##### .rpm build
         
@@ -95,6 +115,19 @@ Description: Flask Api Template (fat) is a Flask-based basic Rest implementation
         https://docs.python.org/2.0/dist/creating-rpms.html
         
         https://docs.python.org/2/distutils/builtdist.html
+        
+        
+        ##### .deb build
+        
+        Run from top of the project:
+        ```
+            python setup.py --command-packages=stdeb.command bdist_deb
+        ```
+        
+        For more info:
+        
+        https://pypi.org/project/stdeb/#quickstart-1-install-something-from-pypi-now-i-don-t-care-about-anything-else
+        
 Platform: UNKNOWN
 Classifier: Programming Language :: Python :: 3
 Classifier: License :: OSI Approved :: GNU General Public License v2 (GPLv2)
