@@ -64,8 +64,8 @@ class APIBaseline:
         if bp_path is None:
             bp_path = 'blueprints/'
 
-        self.path = bp_path.rstrip('/') if bp_path.endswith('/') else bp_path
-        self.path = self.root_dir + '/' + self.path
+        self.bp_path = bp_path.rstrip('/')
+        # self.path = self.root_dir + '/' + self.path
 
         # all registered blueprints path relative to blueprints dir path:
         # (e.g. example/blueprint.py)
@@ -80,24 +80,28 @@ class APIBaseline:
         self.app.url_map.strict_slashes = False
 
         self.SetConfig(cfg)
-        self.RegisterBlueprints(kwargs.get('ignore', None))
+        self.RegisterBlueprints(self.bp_path, kwargs.get('ignore', None))
 
 
     # TODO: ignore_bp arg parser!
-    def RegisterBlueprints(self, ignore_bp=None):
-        """ Add all blueprint scripts found in the blueprints/ folder to the
-        flask routine. """
+    def RegisterBlueprints(self, bp_path, ignore_bp=None):
+        """ Add all blueprint scripts found in the blueprints/ folder (by default)
+        or set in constructor through bp_path param.
+        """
         ignore_bp = ignore_bp if ignore_bp is not None else []
         ignore_bp.append('__pycache__')
 
         # list of all blueprints scripts (not imported as module yet)
         bp_list = []
-        things_in_bp_dir = glob.glob(self.path + '/*')
-        for bp_path in things_in_bp_dir:
-            if bp_path.endswith('__pycache__'):
+        things_in_bp_dir = glob.glob(bp_path + '/*')
+        for path in things_in_bp_dir:
+            if path.endswith('__pycache__'):
                 continue
-            bp_list.extend([path for path in glob.glob(bp_path + '/*.bp') ])
-            bp_list.extend([path for path in glob.glob(bp_path + '/blueprint.py') ])
+            if not path.endswith('.py'):
+                path = os.path.join(path, 'blueprint.py')
+
+            bp_list.extend([path for path in glob.glob(path)])
+            # bp_list.extend([path for path in glob.glob(path + '/*.bp') ])
 
         #get rid of .py and .bp extension in the path name to make it importable
         #bp_list = [path.rstrip('.py') for path in bp_list]
@@ -117,6 +121,7 @@ class APIBaseline:
                       '\n --> [ %s ]' % err
 
                 if self.config.get('PEDANTIC_INIT', True):
+                    logging.error(msg)
                     raise RuntimeError(msg)
                 else:
                     logging.warning('[PEDANTIC_INIT is off]: \n %s' % msg)
@@ -124,7 +129,7 @@ class APIBaseline:
 
             imported_bp.Journal.on_post_register()
             self.app.register_blueprint(imported_bp.Journal.BP)
-            self.blueprints.append(bp.split(self.path)[1].lstrip('/'))
+            self.blueprints.append(bp.split(bp_path)[1].lstrip('/'))
 
             if self.verbose:
                 logging.info('-> Regestring bluerpint "%s"...' % imported_bp.Journal.name)

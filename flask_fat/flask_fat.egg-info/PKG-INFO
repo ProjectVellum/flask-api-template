@@ -5,7 +5,7 @@ Summary: A Python3 netlink handler.
 Home-page: https://github.com/ProjectVellum/flask-api-template
 Author: Zach Volchak
 Author-email: zakhar.volchak@hpe.com
-License: GPLv2
+License: UNKNOWN
 Description: Flask Api Template (fat) is a Flask-based basic Rest implementation with the intention
         of being inherited by other Rest-based applications. It helps save time implementing
         the basic, routine Rest server setup, e.g. starts server, find blueprints, handles

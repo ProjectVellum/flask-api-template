@@ -3,30 +3,13 @@ import os
 import unittest
 from pdb import set_trace
 
-import flask_api_template as FAT
+import flask_fat
 
 
 class FlaskBookshelfTests(unittest.TestCase):
 
     MOCK_CFG = os.path.dirname(os.path.abspath(__file__)) + '/mock.cfg'
-
-    @classmethod
-    def setUpClass(cls):
-        pass
-
-
-    @classmethod
-    def tearDownClass(cls):
-        pass
-
-
-    def setUp(self):
-        pass
-
-
-    def tearDown(self):
-        pass
-
+    APP_NAME = 'flask_fat_test_server'
 
     def test_server_init(self):
         cfg = {
@@ -34,17 +17,16 @@ class FlaskBookshelfTests(unittest.TestCase):
             'HOST' : '1.2.3.4',
             'PORT' : 1234
         }
-        app = FAT.APIBaseline(cfg)
+        app = flask_fat.APIBaseline(self.APP_NAME, cfg=cfg)
 
         self.assertTrue(isinstance(app.config, dict))
         self.assertTrue(app.config['TESTING'] == cfg['TESTING'])
         self.assertTrue(app.config['HOST'] == cfg['HOST'])
         self.assertTrue(app.config['PORT'] == cfg['PORT'])
-        self.assertTrue('example/blueprint.py' in app.blueprints)
 
 
     def test_config_set(self):
-        app = FAT.APIBaseline(self.MOCK_CFG, server_name='APITesting')
+        app = flask_fat.APIBaseline(self.APP_NAME, cfg=self.MOCK_CFG)
 
         self.assertTrue(app.config['TESTING'])
         self.assertTrue(app.config['PORT'] == 5555)
@@ -69,7 +51,7 @@ class FlaskBookshelfTests(unittest.TestCase):
 
 
     def test_run(self):
-        app = FAT.APIBaseline(self.MOCK_CFG, server_name='APITesting')
+        app = flask_fat.APIBaseline(self.APP_NAME, cfg=self.MOCK_CFG)
 
 
 if __name__ == '__main__':
