@@ -27,6 +27,14 @@ setuptools.setup(
         '': ['*.yaml', '*.cfg'],
     },
     packages=setuptools.find_packages(),
+
+    install_requires=[
+        'flask>=1.0',
+        'pyyaml>=5.3',
+        'flask-cors>=3.0',
+        'requests>=2.22'
+    ],
+
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
