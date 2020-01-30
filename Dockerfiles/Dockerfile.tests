@@ -11,14 +11,13 @@ RUN export LANG=C.UTF-8
 # update repo and
 # Install any needed packages specified in requirements.txt
 RUN apt update -y && \
-    apt install -y python3-pip git && \
-    pip3 install . && \
-    pip3 install -r requirements.txt
+    apt install -y python3-pip git curl && \
+    pip3 install .
 
 ENV target_dir /app/flask_fat
 
 RUN ls -l ${target_dir}
 RUN /bin/bash ${target_dir}/tests/test_all.sh
 
-# Run app.py when the container launches
-CMD ["bash", ${target_dir} + "/tests/test_all.sh"]
+RUN echo " ------ UNINSTALL TEST ------"
+RUN curl -s https://raw.githubusercontent.com/ProjectVellum/vellum-utils/master/uninstall_test.sh | bash -s flask_fat flask_fat
