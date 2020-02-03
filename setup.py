@@ -11,6 +11,12 @@ long_dsc = ''
 with open('README.md', 'r') as file_obj:
     long_dsc = file_obj.read()
 
+# Get dependencies from the requirements.txt and set it to install_requires prop.
+#This will help resolve dependencies recursively when this package added as such
+#by outside world.
+requirements = []
+with open('requirements.txt', 'r') as file_obj:
+    requirements = file_obj.read().split('\n')
 
 setuptools.setup(
     name='flask-fat',
@@ -27,6 +33,9 @@ setuptools.setup(
         '': ['*.yaml', '*.cfg'],
     },
     packages=setuptools.find_packages(),
+
+    install_requires=requirements,
+
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',

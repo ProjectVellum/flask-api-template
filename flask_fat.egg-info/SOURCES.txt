@@ -8,6 +8,7 @@ flask_fat/server.cfg
 flask_fat.egg-info/PKG-INFO
 flask_fat.egg-info/SOURCES.txt
 flask_fat.egg-info/dependency_links.txt
+flask_fat.egg-info/requires.txt
 flask_fat.egg-info/top_level.txt
 flask_fat/blueprints/__init__.py
 flask_fat/blueprints/bp_base.py
