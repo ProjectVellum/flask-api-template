@@ -109,9 +109,9 @@ class APIBaseline:
             module_name = bp.replace('/', '.')
             bp_name = module_name.split('.')[-3]
 
-            #ignore files that starts with __, such as __init__.py...
-            if bp_name.startswith('__'):
-                continue
+            # #ignore files that starts with __, such as __init__.py...
+            # if bp_name.startswith('__'):
+            #     continue
 
             if(bp_name in ignore_bp):
                 if self.verbose:
