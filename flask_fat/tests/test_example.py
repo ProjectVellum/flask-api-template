@@ -9,8 +9,8 @@ import flask_fat
 class FlaskBookshelfTests(unittest.TestCase):
 
     APP_NAME = 'flask_fat_test_example'
-    MOCK_CFG = os.path.dirname(os.path.abspath(__file__)) + '/mock.cfg'
-    BP_PATH = os.path.dirname(os.path.abspath(__file__)) + '/mock_bp/'
+    MOCK_CFG = os.path.dirname(os.path.abspath(__file__)) + '/mock/mock.cfg'
+    BP_PATH = os.path.dirname(os.path.abspath(__file__)) + '/mock/bp/'
 
 
     @classmethod
@@ -27,7 +27,9 @@ class FlaskBookshelfTests(unittest.TestCase):
 
 
     def test_init_blueprints(self):
-        app = flask_fat.APIBaseline(self.APP_NAME, cfg=self.MOCK_CFG, bp_path=self.BP_PATH)
+        app = flask_fat.APIBaseline(self.APP_NAME,
+                                    cfg=self.MOCK_CFG,
+                                    bp_path=self.BP_PATH)
 
         # check all the blueprints in the mock blueprint directory where loaded
         # into the flask_fat api.

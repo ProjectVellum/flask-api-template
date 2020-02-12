@@ -25,7 +25,7 @@ from pdb import set_trace
 #pip install -U flask-cors (module is in current dir)
 # import addons.flask_cors as flask_cors
 import flask_cors
-from .config_builder import ConfigBuilder
+from . import ConfigBuilder
 
 class APIBaseline:
 
@@ -47,25 +47,27 @@ class APIBaseline:
 
         bp_path = kwargs.get('bp_path', None)
 
-        # Getting the right pass to the config file for this server.
-        self.config_builder = ConfigBuilder(self.name, self.__file__)
         cfg = kwargs.get('cfg', None)
-        if cfg is None:
-            cfg = self.config_builder.priority_cfg_path
+        if not isinstance(cfg, dict):
+            # Getting the right pass to the config file for this server.
+            self.config_builder = ConfigBuilder(self.name,
+                                                self.__file__,
+                                                path=cfg)
+            cfg = self.config_builder.priority_path
 
-        if cfg is None:
-            err_msg = 'Couldn\'t find config file at any of the following locations: %s'
-            err_msg = err_msg % self.config_builder.cfg_priority_order
-            self.logging.error(err_msg, exc_info=True)
-            raise RuntimeError(err_msg)
+            if cfg is None:
+                err_msg = 'Couldn\'t find config file at any of the following locations: %s'
+                err_msg = err_msg % self.config_builder.cfg_priority_order
+                self.logging.error(err_msg, exc_info=True)
+                raise RuntimeError(err_msg)
 
-        self.logging.critical('Config file used: %s' % cfg)
+            self.logging.critical('Config file used: %s' % cfg)
 
         if bp_path is None:
-            bp_path = 'blueprints/'
+            bp_path = os.path.dirname(os.path.abspath(self.__file__))
+            bp_path = os.path.join(bp_path, 'blueprints/')
 
         self.bp_path = bp_path.rstrip('/')
-        # self.path = self.root_dir + '/' + self.path
 
         # all registered blueprints path relative to blueprints dir path:
         # (e.g. example/blueprint.py)
@@ -93,7 +95,8 @@ class APIBaseline:
 
         # list of all blueprints scripts (not imported as module yet)
         bp_list = []
-        things_in_bp_dir = glob.glob(bp_path + '/*')
+        # #ignore files that starts with __, such as __init__.py...
+        things_in_bp_dir = glob.glob(bp_path + '/[!_]*')
         for path in things_in_bp_dir:
             if path.endswith('__pycache__'):
                 continue
@@ -108,6 +111,7 @@ class APIBaseline:
         for bp in bp_list:
             module_name = bp.replace('/', '.')
             bp_name = module_name.split('.')[-3]
+
             if(bp_name in ignore_bp):
                 if self.verbose:
                     logging.info('!! Ignoring to load blueprint "%s" !!' % bp_name)

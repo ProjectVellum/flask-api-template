@@ -6,10 +6,11 @@ from pdb import set_trace
 import flask_fat
 
 
-class FlaskBookshelfTests(unittest.TestCase):
+class FatServer(unittest.TestCase):
 
-    MOCK_CFG = os.path.dirname(os.path.abspath(__file__)) + '/mock.cfg'
+    MOCK_CFG = os.path.dirname(os.path.abspath(__file__)) + '/mock/mock.conf'
     APP_NAME = 'flask_fat_test_server'
+    BP_PATH = os.path.dirname(os.path.abspath(__file__)) + '/mock/bp/'
 
     def test_server_init(self):
         cfg = {
@@ -17,7 +18,7 @@ class FlaskBookshelfTests(unittest.TestCase):
             'HOST' : '1.2.3.4',
             'PORT' : 1234
         }
-        app = flask_fat.APIBaseline(self.APP_NAME, cfg=cfg)
+        app = flask_fat.APIBaseline(self.APP_NAME, cfg=cfg, bp_path=self.BP_PATH)
 
         self.assertTrue(isinstance(app.config, dict))
         self.assertTrue(app.config['TESTING'] == cfg['TESTING'])
@@ -26,7 +27,7 @@ class FlaskBookshelfTests(unittest.TestCase):
 
 
     def test_config_set(self):
-        app = flask_fat.APIBaseline(self.APP_NAME, cfg=self.MOCK_CFG)
+        app = flask_fat.APIBaseline(self.APP_NAME, cfg=self.MOCK_CFG, bp_path=self.BP_PATH)
 
         self.assertTrue(app.config['TESTING'])
         self.assertTrue(app.config['PORT'] == 5555)
@@ -48,10 +49,6 @@ class FlaskBookshelfTests(unittest.TestCase):
         app.SetConfig(cfg)
         self.assertTrue(app.config['TESTING'] == cfg['TESTING'])
         self.assertTrue(app.config['PORT'] == cfg['PORT'])
-
-
-    def test_run(self):
-        app = flask_fat.APIBaseline(self.APP_NAME, cfg=self.MOCK_CFG)
 
 
 if __name__ == '__main__':

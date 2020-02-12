@@ -12,13 +12,21 @@ class ConfigBuilder:
     from the command line directly.
     """
 
-    def __init__(self, app_name, running_file):
+    def __init__(self, app_name, root_dir, path=None):
+        """
+            @param root_dir: path to server file or dir that will be using the config.
+        """
         self.app_name = app_name
-        self.running_file = running_file
+
+        root_dir = os.path.realpath(root_dir)
+        if os.path.isfile(root_dir):
+            root_dir = os.path.dirname(root_dir)
+        self.dir = root_dir
+        self.custom_path = path
 
 
     @property
-    def user_cfg_path(self):
+    def user_path(self):
         """
             Constructs a path to the user's config file for this application under
         /home/USERNAME/.config/APP_NAME.conf
@@ -27,7 +35,7 @@ class ConfigBuilder:
 
 
     @property
-    def global_cfg_path(self):
+    def global_path(self):
         """
             Construct a path to a global config file of the application:
         /etc/aap_name.conf
@@ -36,20 +44,31 @@ class ConfigBuilder:
 
 
     @property
-    def inproject_cfg_path(self):
+    def inproject_path(self):
         """
             Constructs a path to a config file in the directory of running file:
-        /PATH_TO_THIS_APP/config.conf
+        /PATH_TO_THIS_APP/server.conf
         """
-        config_path = os.path.realpath(self.running_file)
-        config_path = os.path.dirname(config_path)
-        config_path = os.path.join(config_path, 'config.conf')
+        config_path = os.path.join(self.dir, 'server.conf')
         return config_path
 
 
     @property
-    def priority_cfg_path(self):
+    def inproject_name_path(self):
+        """
+            Constructs a path to a config file in the directory of running file:
+        /PATH_TO_THIS_APP/APP_NAME.conf
+        """
+        config_path = os.path.join(self.dir, '%s.conf' % self.app_name)
+        return config_path
+
+
+    @property
+    def priority_path(self):
         for cfg_path in self.cfg_priority_order:
+            if cfg_path is None:
+                continue
+
             if os.path.exists(cfg_path):
                 return cfg_path
         return None
@@ -58,8 +77,13 @@ class ConfigBuilder:
     @property
     def cfg_priority_order(self):
         priority_order = [
-            self.user_cfg_path,
-            self.global_cfg_path,
-            self.inproject_cfg_path,
+            self.user_path,
+            self.global_path,
+            self.inproject_name_path,
+            self.inproject_path,
         ]
+
+        if self.custom_path is not None:
+            priority_order.insert(0, self.custom_path)
+
         return priority_order

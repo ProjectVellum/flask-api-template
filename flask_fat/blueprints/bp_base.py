@@ -28,7 +28,7 @@ class Journal():
     and using the same word as Flask's class Blueprint is "context confusing".
     """
 
-    def __init__(self, name, **args):
+    def __init__(self, name, **kargs):
         """
             @param name: pass __file__ to assign blueprint's dirname as Journal
                         name, or pass non empty string to set a custom name.
@@ -37,7 +37,7 @@ class Journal():
             @args mainapp: a Flask server that is using this jouranl/blueprint.
         """
         self.json_model = {}
-        self.mainapp = args.get('mainapp', None)
+        self.mainapp = kargs.get('mainapp', None)
 
         self.name = os.path.dirname(name).split('/')[-1]
         if not self.name:
@@ -49,7 +49,7 @@ class Journal():
                                                 len(self.last_response._fields)
 
         self.BP = Blueprint(self.name, __name__,
-                            url_prefix=args.get('url_prefix', ''),
+                            url_prefix=kargs.get('url_prefix', ''),
                             static_url_path='/static/')
 
 
